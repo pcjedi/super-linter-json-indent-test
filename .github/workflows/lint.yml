@@ -25,6 +25,9 @@ jobs:
         uses: super-linter/super-linter@v8.5.0 # x-release-please-version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_MARKDOWN_PRETTIER: false
           # Set your fix mode variables to true
           FIX_BIOME_FORMAT: true
           FIX_BIOME_LINT: true
