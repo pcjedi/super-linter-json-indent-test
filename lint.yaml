@@ -1,0 +1,47 @@
+---
+name: Lint
+
+on: # yamllint disable-line rule:truthy
+  # push: null
+  pull_request: null
+
+permissions:
+  contents: read
+
+jobs:
+  fix-lint-issues:
+    permissions:
+      # To write linting fixes
+      contents: write
+      # To write Super-linter status checks
+      statuses: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Super-Linter
+        uses: super-linter/super-linter@v8.5.0 # x-release-please-version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          # Set your fix mode variables to true
+          FIX_BIOME_LINT: true
+          # To reuse the same Super-linter configuration that you use in the
+          # lint job without duplicating it, see
+          # https://github.com/super-linter/super-linter/blob/main/docs/run-linter-locally.md#share-environment-variables-between-environments
+      - shell: bash
+        # if: always() && github.event_name == 'pull_request'
+        run: |
+          git config --global user.email super-linter@users.noreply.github.com
+          git config --global user.name super-linter
+          git checkout "$GITHUB_HEAD_REF"
+          git branch --set-upstream-to=origin/"$GITHUB_HEAD_REF"
+          git add --update -- ':(exclude).github/workflows/'
+          git commit -m "chore(super-linter): close and reopen PR now" || echo "nothing to commit (linter)"
+          git stash
+          git pull --rebase
+          git push
