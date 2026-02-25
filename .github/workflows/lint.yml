@@ -1,19 +1,15 @@
 ---
 name: Lint
 
-on: # yamllint disable-line rule:truthy
-  # push: null
-  pull_request: null
+on:
+  pull_request: 
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   fix-lint-issues:
     permissions:
-      # To write linting fixes
       contents: write
-      # To write Super-linter status checks
       statuses: write
     runs-on: ubuntu-latest
     steps:
@@ -109,6 +105,7 @@ jobs:
           git config --global user.name super-linter
           git checkout "$GITHUB_HEAD_REF"
           git branch --set-upstream-to=origin/"$GITHUB_HEAD_REF"
+          git add --update -- ':(exclude).github/workflows/'
           git commit -m "chore(super-linter): close and reopen PR now" || echo "nothing to commit (linter)"
           git stash
           git pull --rebase
