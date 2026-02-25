@@ -41,6 +41,7 @@ jobs:
           git config --global user.name super-linter
           git checkout "$GITHUB_HEAD_REF"
           git branch --set-upstream-to=origin/"$GITHUB_HEAD_REF"
+          git add --update -- ':(exclude).github/workflows/'
           git commit -m "chore(super-linter): close and reopen PR now" || echo "nothing to commit (linter)"
           git stash
           git pull --rebase
