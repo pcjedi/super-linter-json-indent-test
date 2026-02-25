@@ -1,6 +1,6 @@
 {
-  "dependencies": {
-    "serverless": ">=4.6.4",
-    "serverless-api-gateway-caching": ">=1.10.4"
-  }
+	"dependencies": {
+		"serverless": ">=4.6.4",
+		"serverless-api-gateway-caching": ">=1.10.4"
+	}
 }
